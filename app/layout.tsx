@@ -1,6 +1,7 @@
 import "./globals.css";
-import { DM_Sans, Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { DM_Sans, Geist } from "next/font/google";
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -9,12 +10,18 @@ const dmSans = DM_Sans({
   weight: ["100","200","300","400","500","600","700","800","900"],
 });
 
-export default function RootLayout({ children }: any) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body className={dmSans.className}>
-        {children}
+        <TooltipProvider>
+          {children}
+        </TooltipProvider>
       </body>
     </html>
-  );
+  )
 }

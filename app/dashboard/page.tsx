@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
-import Button from '../ui/Button'
+import { Button } from '@/components/ui/button'
 
 export default function Dashboard() {
   const router = useRouter()
@@ -33,9 +33,10 @@ export default function Dashboard() {
     <div className="p-10">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Dashboard</h1>
-        <Button primary
+        <Button
+          variant="destructive"
           onClick={handleLogout}
-          scary
+          className='cursor-pointer'
         >
           Logout
         </Button>

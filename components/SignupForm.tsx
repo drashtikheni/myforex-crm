@@ -3,23 +3,33 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Button from '@/app/ui/Button'
+
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Label } from '@/components/ui/label'
 
 export default function SignupForm() {
   const router = useRouter()
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSignup = async () => {
+  const handleSignup = async (e: any) => {
+    e.preventDefault()
+    setLoading(true)
+
     const res = await fetch('/api/auth/signup', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     })
 
     const data = await res.json()
+    setLoading(false)
 
     if (res.ok) {
-      alert("Check your email")
+      alert('Check your email')
       router.push('/login')
     } else {
       alert(data.error)
@@ -27,61 +37,66 @@ export default function SignupForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-
-        {/* STEP INDICATOR */}
-        {/* <div className="flex items-center justify-center mb-6">
-          <div className="w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white text-sm font-bold">
-            1
+    <div className="min-h-screen w-full flex">
+      <div className="flex-1 flex items-center justify-center px-6 py-20 bg-background">
+        <div className="w-full max-w-md space-y-8">
+          <div>
+            <h2 className="text-3xl font-bold">Create your account</h2>
+            <p className="text-muted-foreground mt-1">
+              Begin your journey into precision trading.
+            </p>
           </div>
-          <div className="flex-1 h-[2px] bg-gray-200 mx-2"></div>
-          <div className="w-8 h-8 rounded-full bg-gray-200"></div>
-        </div> */}
-
-        {/* TITLE */}
-        <h2 className="text-2xl font-bold text-center mb-2 text-primary">
-          Create your account
-        </h2>
-
-        <p className="text-center text-gray-500 mb-6 text-sm">
-          Start trading in minutes
-        </p>
-
-        {/* EMAIL */}
-        <input
-          type="email"
-          placeholder="Enter your email"
-          className="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        {/* PASSWORD */}
-        <input
-          type="password"
-          placeholder="Create password"
-          className="w-full p-3 border rounded-lg mb-6 focus:outline-none focus:ring-2 focus:ring-green-500"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        {/* BUTTON */}
-        <Button
-          primary
-          onClick={handleSignup}
-          className="w-full rounded-lg"
-        >
-          Create Account
-        </Button>
-
-        {/* LOGIN LINK */}
-        <p className="mt-6 text-sm text-center text-gray-500">
-          Already have an account?{" "}
-          <Link href="/login" className="text-primary font-medium hover:underline">
-            Sign in
-          </Link>
-        </p>
-
+          <form onSubmit={handleSignup} className="space-y-6">
+            <div className="mb-4">
+              <Label>Email Address</Label>
+              <Input
+                type="email"
+                placeholder="name@company.com"
+                className="mt-2 h-12 rounded-xl"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <Label>Password</Label>
+              <Input
+                type="password"
+                placeholder="Min. 8 characters"
+                value={password}
+                className='mt-2 h-12 rounded-xl'
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="flex items-start space-x-2">
+              <Checkbox id="terms" />
+              <label
+                htmlFor="terms"
+                className="text-sm text-muted-foreground leading-tight"
+              >
+                I agree to the{' '}
+                <span className="text-primary font-medium cursor-pointer">
+                  Terms
+                </span>{' '}
+                and{' '}
+                <span className="text-primary font-medium cursor-pointer">
+                  Privacy Policy
+                </span>
+              </label>
+            </div>
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading}
+            >
+              {loading ? 'Creating...' : 'Sign Up'}
+            </Button>
+          </form>
+          <p className="text-center text-sm text-muted-foreground">
+            Already have an account?
+            <Link href="/login" className="text-primary font-medium ml-1">
+              Sign In
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   )
